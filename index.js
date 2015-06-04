@@ -1,4 +1,5 @@
 var Hapi = require('hapi');
+var Path = require('path');
 
 var server = new Hapi.Server();
 server.connection({ 
@@ -6,11 +7,19 @@ server.connection({
     port: 8000 
 });
 
+server.views({
+    engines: {
+        html: require('handlebars')
+    },
+    relativeTo: __dirname,
+    path: './templates'
+});
+
 server.route({
     method: 'GET',
-    path:'/hello', 
+    path:'/', 
     handler: function (request, reply) {
-       reply('hello world');
+       reply.view('index');
     }
 });
 
