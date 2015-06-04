@@ -1,0 +1,12 @@
+{    
+    "name": "bootstrap-flatly",    
+    "description": "Twitter Bootstrap CSS Framework with the Flatly swatch applied",    
+    
+    "version": "3.0.0",
+	"jam": {
+		"main": "js/bootstrap.min.js",
+		"dependencies": {
+			"jquery": ">=1.6"
+		}
+	}
+}

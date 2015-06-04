@@ -23,4 +23,16 @@ server.route({
     }
 });
 
+// serve static file
+server.route({
+    method: 'GET',
+    path: '/static/{param*}',
+    handler: {
+        directory: {
+            path: 'jam'
+            //,listing: true
+        }
+    }
+});
+
 server.start();
