@@ -7,13 +7,17 @@ server.connection({
     port: 8000 
 });
 
+
 server.views({
     engines: {
         html: require('handlebars')
     },
-    relativeTo: __dirname,
-    path: './templates'
+    layout: true,
+    path: Path.join(__dirname, 'templates'),
+    layoutPath: Path.join(__dirname, 'templates/layout'),
+    partialsPath: Path.join(__dirname, 'templates/partials')
 });
+
 
 server.route({
     method: 'GET',
@@ -22,6 +26,18 @@ server.route({
        reply.view('index');
     }
 });
+
+server.route({
+    method: 'POST',
+    path:'/pay', 
+    handler: function (request, reply) {
+        // form validation?
+        // save to db?
+        console.log(request);
+        reply.view()
+    }
+});
+
 
 // serve static file
 server.route({
