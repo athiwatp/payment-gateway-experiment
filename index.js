@@ -34,7 +34,7 @@ server.route({
         // form validation?
         // save to db?
         console.log(request);
-        reply.view()
+        reply.view('pay_success')
     }
 });
 
