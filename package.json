@@ -19,6 +19,10 @@
   "homepage": "https://github.com/keerati/payment-gateway-experiment",
   "dependencies": {
     "hapi": "~8.6.0",
-    "handlebars": "~3.0.3"
+    "handlebars": "~3.0.3",
+    "paypal-rest-sdk": "~1.5.3",
+    "braintree": "~1.26.0",
+    "joi": "~6.4.3",
+    "swig": "~1.4.2"
   }
 }

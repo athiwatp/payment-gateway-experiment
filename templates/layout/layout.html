@@ -3,10 +3,13 @@
   <head>
     <title>Pay Page</title>
     <link rel="stylesheet" href="/static/bootstrap-flatly/css/bootstrap.min.css" media="screen">
+    <script src="https://js.braintreegateway.com/v2/braintree.js"></script>
+    <script src="/static/jquery/dist/jquery.min.js"></script>
+    {% block head %}{% endblock %}
   </head>
   <body>
     <div class="container">
-      {{{ content }}}
+      {% block content %}{% endblock %}
     </div>
   </body>
 </html>

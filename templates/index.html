@@ -1,84 +1,147 @@
+{% extends './layout/layout.html' %}
+
+{% macro form_group %}
+  {% set fieldnames = arguments %}
+  {% set has_error = 'false' %}
+  {% for name in fieldnames %}
+    {% for key in error_keys %}
+      {% if name == key %}
+        {% set has_error = 'true' %}
+      {% endif %}
+    {% endfor %}
+  {% endfor %}
+
+  {% if has_error == 'true' %}
+  <div class="form-group has-error">
+  {% else %}
+  <div class="form-group">
+  {% endif %}
+{% endmacro %}
+
+{% macro error_text(fieldname) %}
+  {% for key in error_keys %}
+    {% if fieldname == key %}
+      <span class="help-block">{{ error[fieldname] }}</span>
+    {% endif %}
+  {% endfor %}
+{% endmacro %}
+
+{% block content %}
 <h1>Pay Me!</h1>
 <div class="row">
   <div class="col-lg-12">
     <div class="well bs-component">
-      <form class="form-horizontal" method="post" action="/pay">
+      {% if error %}
+      <div class="panel panel-danger">
+        <div class="panel-heading">
+          <h3 class="panel-title">Error</h3>
+        </div>
+        <div class="panel-body">
+          There are some errors. Please see below.
+        </div>
+      </div>
+      {% endif %}
+      <form class="form-horizontal" action="/pay" method="post">
         <fieldset>
           <legend>Order</legend>
-          <div class="form-group">
+          {{ form_group('price') }}
             <label for="price" class="col-lg-2 control-label">Price</label>
             <div class="col-lg-10">
-              <input type="text" class="form-control" id="price"
+              <input type="text" class="form-control" 
+                id="price" name="price"
+                value="{{payload.price}}" 
                 placeholder="Price you want to pay me">
+                {{ error_text('price') }}
             </div>
           </div>
           <div class="form-group">
             <label for="currrency" class="col-lg-2 control-label">Currency</label>
             <div class="col-lg-10">
+              {% set currencies = ["usd", "eur", "thb", "hkd", "sgd", "aud"] %}
               <select class="form-control" id="currency" name="currency">
-                <option value="usd">USD</option>
-                <option value="eur">EUR</option>
-                <option value="thb">THB</option>
-                <option value="hkd">HKD</option>
-                <option value="sgd">SGD</option>
-                <option value="aud">AUD</option>
+                {% for currency in currencies %}
+                  <option value="{{currency}}"
+                  {% if payload.currency == currency %}selected="selected"{% endif %}
+                  >{{currency|upper}}</option>
+                {% endfor %}
               </select>
             </div>
           </div>
-          <div class="form-group">
+          {{ form_group('fullname') }}
             <label for="fullname" class="col-lg-2 control-label">Customer Full Name</label>
             <div class="col-lg-10">
-              <input type="text" class="form-control" id="fullname" 
+              <input type="text" class="form-control" 
+                id="fullname" name="fullname"
+                value="{{payload.fullname}}" 
                 placeholder="Your firstname and lastname Ex. Keerati Thiwanruk">
+                {{ error_text('fullname') }}
             </div>
           </div>
         </fieldset>
         <fieldset>
           <legend>Payment</legend>
-          <div class="form-group">
+          {{ form_group('card_holder_firstname', 'card_holder_lastname') }}
             <label for="card_holder_name" class="col-lg-2 control-label">Credit card holder name</label>
-            <div class="col-lg-10">
-              <input type="text" class="form-control" id="card_holder_name"
-                placeholder="Your name">
+            <div class="col-lg-5">
+              <input type="text" class="form-control"
+                id="card_holder_firstname" name="card_holder_firstname"
+                value="{{payload.card_holder_firstname}}" 
+                placeholder="Firstname">
+                {{ error_text('card_holder_firstname') }}
+            </div>
+            <div class="col-lg-5">
+              <input type="text" class="form-control"
+                id="card_holder_lastname" name="card_holder_lastname"
+                value="{{payload.card_holder_lastname}}" 
+                placeholder="Lastname">
+                {{ error_text('card_holder_lastname') }}
             </div>
           </div>
-          <div class="form-group">
+          {{ form_group('card_number') }}
             <label for="card_number" class="col-lg-2 control-label">Credit card number</label>
-            <div class="col-lg-2">
-              <input type="text" class="form-control" id="card_number_1">
-            </div>
-            <div class="col-lg-2">
-              <input type="text" class="form-control" id="card_number_2">
-            </div>
-            <div class="col-lg-2">
-              <input type="text" class="form-control" id="card_number_3">
-            </div>
-            <div class="col-lg-2">
-              <input type="text" class="form-control" id="card_number_4">
+            <div class="col-lg-10">
+              <input type="text" class="form-control" 
+                id="card_number" name="card_number"
+                value="{{payload.card_number}}" 
+                maxlength="19">
+                {{ error_text('card_number') }}
             </div>
           </div>
-          <div class="form-group">
-            <label for="card_ccv" class="col-lg-2 control-label">Credit card CCV</label>
+          {{ form_group('card_cvv') }}
+            <label for="card_ccv" class="col-lg-2 control-label">Credit card CVV</label>
             <div class="col-lg-2">
-              <input type="text" class="form-control" id="card_ccv" placeholder="CCV">
+              <input type="text" class="form-control" 
+                id="card_cvv" name="card_cvv"
+                value="{{payload.card_cvv}}" 
+                placeholder="CCV" maxlength="3">
+                {{ error_text('card_cvv') }}
             </div>
           </div>
-          <div class="form-group">
+          {{ form_group('card_expire_month', 'card_expire_year') }}
             <label for="card_expire" class="col-lg-2 control-label">Credit card expiration</label>
             <div class="col-lg-2">
-              <input type="text" class="form-control" id="card_expire_month" placeholder="month">
+              <input type="text" class="form-control"
+                id="card_expire_month" name="card_expire_month" 
+                value="{{payload.card_expire_month}}" 
+                placeholder="month" maxlength="2">
+                {{ error_text('card_expire_month') }}
             </div>
             <div class="col-lg-2">
-              <input type="text" class="form-control" id="card_expire_year" placeholder="year">
+              <input type="text" class="form-control"
+                id="card_expire_year" name="card_expire_year"
+                value="{{payload.card_expire_year}}" 
+                placeholder="year" maxlength="4">
+                {{ error_text('card_expire_year') }}
             </div>
           </div>
           <div class="form-group">
             <label for="nothing" class="col-lg-2 control-label"></label>
             <div class="col-lg-10">
-              <button type="submit" class="btn btn-success">Pay me now!</button>
+              <button type="submit" class="btn btn-success">Pay me now!</a>
           </div>
         </fieldset>
       </form>
     </div>
   </div>
 </div>
+{% endblock %}
