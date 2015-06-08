@@ -19,11 +19,9 @@
 {% endmacro %}
 
 {% macro error_text(fieldname) %}
-  {% for key in error_keys %}
-    {% if fieldname == key %}
-      <span class="help-block">{{ error[fieldname] }}</span>
-    {% endif %}
-  {% endfor %}
+  {% if error[fieldname] %}
+    <span class="help-block">{{ error[fieldname] }}</span>
+  {% endif %}
 {% endmacro %}
 
 {% block content %}
@@ -37,7 +35,11 @@
           <h3 class="panel-title">Error</h3>
         </div>
         <div class="panel-body">
+        {% if error.global %}
+          {{ error.global }}
+        {% else %}
           There are some errors. Please see below.
+        {% endif %}
         </div>
       </div>
       {% endif %}
