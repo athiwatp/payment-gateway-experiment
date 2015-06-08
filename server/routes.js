@@ -74,7 +74,26 @@ exports.register = function(server) {
 
                 var gatewayName = getGateway(cardType, currency);
 
+                Pay.pay(gatewayName, price, currency, creditCardInfo, function(error, res) {
+                    if (error) {
+                        console.log(error);
+                        renderError(
+                            reply, 
+                            { 'global' : 
+                                error.response.message 
+                                || "An unknown error has occurred at payment gateway" 
+                            }, 
+                            ['global'],
+                            payload
+                        )
+                    } else {
+                        reply.redirect('/paid');
+                    }
+                });
+
+
             } catch(error) {
+                console.log(error);
                 renderError(
                     reply, 
                     { 'global' : error.message }, 
@@ -83,21 +102,6 @@ exports.register = function(server) {
                 )
             }
 
-            Pay.pay(gatewayName, '10.00', 'USD', creditCardInfo, function(error, res) {
-                if (error) {
-                    renderError(
-                        reply, 
-                        { 'global' : 
-                            error.response.message 
-                            || "An unknown error has occurred at payment gateway" 
-                        }, 
-                        ['global'],
-                        payload
-                    )
-                } else {
-                    reply.redirect('/paid');
-                }
-            });
 
         },
         config: {
