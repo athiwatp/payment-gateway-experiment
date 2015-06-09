@@ -1,6 +1,7 @@
 var Joi = require('joi');
 var Pay = require('../lib/pay');
 var CardIssuer = require('../lib/card_issuer');
+var Payment = require('./models/payment');
 
 var PAYPAL = 'paypal';
 var BRAINTREE = 'braintree';
@@ -75,6 +76,7 @@ exports.register = function(server) {
                 var gatewayName = getGateway(cardType, currency);
 
                 Pay.pay(gatewayName, price, currency, creditCardInfo, function(error, res) {
+                    Payment.savePayment(payload, res);
                     if (error) {
                         renderError(
                             reply, 

@@ -48,7 +48,15 @@ lab.experiment("Server", function() {
     };
 
     var payStub = {};
-    var stubs = { '../lib/pay' : payStub, '@global': true };
+    var stubs = {
+        '../server/models/payment': {
+            'savePayment' : function(orderData, gatewayRes) {
+                return {};
+            }
+        },
+        '../lib/pay' : payStub, 
+        '@global': true 
+    };
 
 
     var Routes = Proxyquire('../server/routes', stubs );
