@@ -170,6 +170,34 @@ lab.experiment("Server", function() {
         expectPOSTErrorText(Server, '/pay', payload, 'An unknown error has occurred at payment gateway : braintree', done);
     });
 
+    lab.test("return paid page if payment is successful", function(done) {
+        payStub.pay = successPay;
+        var payload = {
+            price: "1",
+            currency: "HKD",
+            fullname: "Keerati Thiwanruk",
+            card_holder_firstname: "Keerati",
+            card_holder_lastname: "Thiwanruk",
+            card_number: "4111111111111111",
+            card_cvv: "123",
+            card_expire_month: "06",
+            card_expire_year: "2020"
+        };
+
+        Server.inject({
+            'method': 'POST', 
+            'url': '/pay',
+            'payload': payload 
+        }, function(res) {
+            Code.expect(res.statusCode).to.equal(302);
+            Code.expect(res.headers.location).to.equal('/paid');
+
+            done();
+        });
+
+    });
+
+
 
 });
 
