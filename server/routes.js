@@ -76,12 +76,11 @@ exports.register = function(server) {
 
                 Pay.pay(gatewayName, price, currency, creditCardInfo, function(error, res) {
                     if (error) {
-                        console.log(error);
                         renderError(
                             reply, 
                             { 'global' : 
                                 error.response.message 
-                                || "An unknown error has occurred at payment gateway" 
+                                || "An unknown error has occurred at payment gateway : " + gatewayName
                             }, 
                             ['global'],
                             payload
@@ -93,7 +92,6 @@ exports.register = function(server) {
 
 
             } catch(error) {
-                console.log(error);
                 renderError(
                     reply, 
                     { 'global' : error.message }, 
